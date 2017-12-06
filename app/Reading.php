@@ -10,4 +10,9 @@ class Reading extends Model
     	'sensor_id',
     	'value'
     ];
+
+    public function sensor()
+    {
+        return $this->belongsTo('App\Sensor');
+    }
 }

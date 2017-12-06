@@ -3,8 +3,9 @@
 namespace Tests\Feature;
 
 use App\Reading;
-use Tests\TestCase;
+use App\Sensor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ReadingsTest extends TestCase
 {
@@ -37,5 +38,23 @@ class ReadingsTest extends TestCase
         $response->assertStatus(201);
 
         $this->assertCount(5, $response->json());
+    }
+
+    /** @test */
+    public function it_returns_a_sensor_history()
+    {
+        $sensor = factory(Sensor::class)->create([
+            'slug' => 'temperature'
+        ]);
+
+        $readings = factory(Reading::class, 10)->create([
+            'sensor_id' => $sensor
+        ]);
+
+        $response = $this->json('GET', '/api/readings/temperature');
+
+        $response->assertStatus(200);
+
+        $this->assertCount(10, $response->json());
     }
 }

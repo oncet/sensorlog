@@ -16,7 +16,7 @@ class CreateReadingsTable extends Migration
         Schema::create('readings', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('sensor_id');
-            $table->string('value');
+            $table->integer('value');
             $table->timestamps();
 
             $table->foreign('sensor_id')->references('sensors')->on('id');

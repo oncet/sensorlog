@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/readings', 'ReadingController@store');
 Route::post('/readings/multiple', 'ReadingController@storeMultiple');
+Route::get('/readings/{sensor}', 'ReadingController@show');
