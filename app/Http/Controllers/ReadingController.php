@@ -35,17 +35,18 @@ class ReadingController extends Controller
      */
     public function storeMultiple(Request $request)
     {
-        $readings = collect();
+        $all = collect($request->all());
 
-        foreach($request->all() as $reading) {
-
+        $all->each(function ($reading) {
             Validator::make($reading, [
                 'sensor_id' => 'required',
                 'value'     => 'required'
             ])->validate();
+        });
 
-            $readings->push(Reading::create($reading));
-        }
+        $readings = $all->map(function ($reading) {
+            return Reading::create($reading);
+        });
 
         return response()->json($readings, 201);
     }

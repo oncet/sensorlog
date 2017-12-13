@@ -38,6 +38,10 @@ class ReadingsTest extends TestCase
         $response->assertStatus(201);
 
         $this->assertCount(5, $response->json());
+
+        $responseReading = collect($response->json())->first();
+
+        $this->assertArrayHasKey('id', $responseReading);
     }
 
     /** @test */
