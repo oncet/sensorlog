@@ -17,10 +17,7 @@ class ReadingController extends Controller
      */
     public function store(Request $request)
     {
-    	$data = $request->validate([
-    		'sensor_id' => 'required',
-    		'value'     => 'required'
-    	]);
+    	$data = $request->validate(Reading::getRules());
 
     	$reading = Reading::create($data);
 
@@ -38,10 +35,7 @@ class ReadingController extends Controller
         $all = collect($request->all());
 
         $all->each(function ($reading) {
-            Validator::make($reading, [
-                'sensor_id' => 'required',
-                'value'     => 'required'
-            ])->validate();
+            Validator::make($reading, Reading::getRules())->validate();
         });
 
         $readings = $all->map(function ($reading) {

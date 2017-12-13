@@ -11,8 +11,18 @@ class Reading extends Model
     	'value'
     ];
 
+    public static $rules = [
+    	'sensor_id' => 'required',
+    	'value'     => 'required'
+    ];
+
     public function sensor()
     {
         return $this->belongsTo('App\Sensor');
+    }
+
+    public static function getRules()
+    {
+    	return self::$rules;
     }
 }
