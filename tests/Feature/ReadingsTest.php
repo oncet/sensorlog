@@ -47,20 +47,12 @@ class ReadingsTest extends TestCase
     /** @test */
     public function it_returns_a_sensor_history()
     {
-        $temperatureSensor = factory(Sensor::class)->create([
-            'slug' => 'temperature'
-        ]);
-
         $readings = factory(Reading::class, 10)->create([
-            'sensor_id' => $temperatureSensor
-        ]);
-
-        $humiditySensor = factory(Sensor::class)->create([
-            'slug' => 'humidity'
+            'sensor_id' => factory(Sensor::class)->create(['slug' => 'temperature'])
         ]);
 
         factory(Reading::class, 5)->create([
-            'sensor_id' => $humiditySensor
+            'sensor_id' => factory(Sensor::class)->create(['slug' => 'other-sensor'])
         ]);
 
         $response = $this->json('GET', '/api/readings/temperature');
