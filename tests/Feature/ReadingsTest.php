@@ -47,12 +47,20 @@ class ReadingsTest extends TestCase
     /** @test */
     public function it_returns_a_sensor_history()
     {
-        $sensor = factory(Sensor::class)->create([
+        $temperatureSensor = factory(Sensor::class)->create([
             'slug' => 'temperature'
         ]);
 
         $readings = factory(Reading::class, 10)->create([
-            'sensor_id' => $sensor
+            'sensor_id' => $temperatureSensor
+        ]);
+
+        $humiditySensor = factory(Sensor::class)->create([
+            'slug' => 'humidity'
+        ]);
+
+        factory(Reading::class, 5)->create([
+            'sensor_id' => $humiditySensor
         ]);
 
         $response = $this->json('GET', '/api/readings/temperature');
@@ -60,5 +68,11 @@ class ReadingsTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertCount(10, $response->json());
+
+        $responseReading = collect($response->json())->first();
+
+        $this->assertArrayHasKey('id', $responseReading);
+
+        $this->assertEquals($readings->first()->sensor_id, $responseReading['sensor_id']);
     }
 }
