@@ -29,6 +29,26 @@ class ReadingsTest extends TestCase
     }
 
     /** @test */
+    public function it_fails_to_stores_a_reading()
+    {
+        $reading = factory(Reading::class)->make(['sensor_id' => null]);
+
+        $response = $this->json('POST', '/api/readings', $reading->toArray());
+
+        $response->assertStatus(422);
+
+        $this->assertArrayHasKey('sensor_id', $response->json()['errors']);
+
+        $reading = factory(Reading::class)->make(['value' => null]);
+
+        $response = $this->json('POST', '/api/readings', $reading->toArray());
+
+        $response->assertStatus(422);
+
+        $this->assertArrayHasKey('value', $response->json()['errors']);
+    }
+
+    /** @test */
     public function it_stores_multiple_readings()
     {
         $readings = factory(Reading::class, 5)->make();
@@ -42,6 +62,26 @@ class ReadingsTest extends TestCase
         $responseReading = collect($response->json())->first();
 
         $this->assertArrayHasKey('id', $responseReading);
+    }
+
+    /** @test */
+    public function it_fails_to_stores_multiple_readings()
+    {
+        $readings = factory(Reading::class, 5)->make(['sensor_id' => null]);
+
+        $response = $this->json('POST', '/api/readings/multiple', $readings->toArray());
+
+        $response->assertStatus(422);
+
+        $this->assertArrayHasKey('sensor_id', $response->json()['errors']);
+
+        $readings = factory(Reading::class, 5)->make(['value' => null]);
+
+        $response = $this->json('POST', '/api/readings/multiple', $readings->toArray());
+
+        $response->assertStatus(422);
+
+        $this->assertArrayHasKey('value', $response->json()['errors']);
     }
 
     /** @test */
