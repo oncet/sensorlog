@@ -61,7 +61,7 @@ class ReadingsTest extends TestCase
     }
 
     /** @test */
-    public function it_fails_to_stores_multiple_readings_with_empty_request()
+    public function it_fails_to_stores_multiple_readings_with_empty_payload()
     {
         $response = $this->json('POST', '/api/readings/multiple', []);
 
