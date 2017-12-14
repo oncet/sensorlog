@@ -94,7 +94,12 @@ class ReadingsTest extends TestCase
         $this->assertEquals($readings->first()->sensor_id, $responseReading['sensor_id']);
     }
 
-    private function failsToStoreReading($field, $amount = 1)
+    /**
+     * Assert that the storing of the readings failed
+     * @param  string  $field  Field to set to null
+     * @param  integer $amount Amount of readings to create
+     */
+    private function failsToStoreReading(string $field, $amount = 1)
     {
         $suffix = $amount > 1? '/multiple' : null;
 
