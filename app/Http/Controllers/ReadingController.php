@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Reading;
 use App\Sensor;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Validator;
 
 class ReadingController extends Controller
@@ -33,6 +34,10 @@ class ReadingController extends Controller
     public function storeMultiple(Request $request)
     {
         $all = collect($request->all());
+
+        if($all->isEmpty()) {
+            throw ValidationException::withMessages(['errors' => 'Request is empty.']);
+        }
 
         $all->each(function ($reading) {
             Validator::make($reading, Reading::getRules())->validate();

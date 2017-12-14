@@ -61,6 +61,16 @@ class ReadingsTest extends TestCase
     }
 
     /** @test */
+    public function it_fails_to_stores_multiple_readings_with_empty_request()
+    {
+        $response = $this->json('POST', '/api/readings/multiple', []);
+
+        $response->assertStatus(422);
+
+        $this->assertArrayHasKey('errors', $response->json());
+    }
+
+    /** @test */
     public function it_returns_a_sensor_history()
     {
         $readings = factory(Reading::class, 10)->create([
