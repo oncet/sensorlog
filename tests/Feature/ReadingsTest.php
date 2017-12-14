@@ -31,21 +31,9 @@ class ReadingsTest extends TestCase
     /** @test */
     public function it_fails_to_stores_a_reading()
     {
-        $reading = factory(Reading::class)->make(['sensor_id' => null]);
+        $this->failsToStoreReading('sensor_id');
 
-        $response = $this->json('POST', '/api/readings', $reading->toArray());
-
-        $response->assertStatus(422);
-
-        $this->assertArrayHasKey('sensor_id', $response->json()['errors']);
-
-        $reading = factory(Reading::class)->make(['value' => null]);
-
-        $response = $this->json('POST', '/api/readings', $reading->toArray());
-
-        $response->assertStatus(422);
-
-        $this->assertArrayHasKey('value', $response->json()['errors']);
+        $this->failsToStoreReading('value');
     }
 
     /** @test */
@@ -67,21 +55,9 @@ class ReadingsTest extends TestCase
     /** @test */
     public function it_fails_to_stores_multiple_readings()
     {
-        $readings = factory(Reading::class, 5)->make(['sensor_id' => null]);
+        $this->failsToStoreReading('sensor_id', 5);
 
-        $response = $this->json('POST', '/api/readings/multiple', $readings->toArray());
-
-        $response->assertStatus(422);
-
-        $this->assertArrayHasKey('sensor_id', $response->json()['errors']);
-
-        $readings = factory(Reading::class, 5)->make(['value' => null]);
-
-        $response = $this->json('POST', '/api/readings/multiple', $readings->toArray());
-
-        $response->assertStatus(422);
-
-        $this->assertArrayHasKey('value', $response->json()['errors']);
+        $this->failsToStoreReading('value', 5);
     }
 
     /** @test */
@@ -106,5 +82,18 @@ class ReadingsTest extends TestCase
         $this->assertArrayHasKey('id', $responseReading);
 
         $this->assertEquals($readings->first()->sensor_id, $responseReading['sensor_id']);
+    }
+
+    private function failsToStoreReading($field, $amount = 1)
+    {
+        $suffix = $amount > 1? '/multiple' : null;
+
+        $reading = factory(Reading::class, $amount)->make([$field => null]);
+
+        $response = $this->json('POST', '/api/readings' . $suffix, $reading->toArray());
+
+        $response->assertStatus(422);
+
+        $this->assertArrayHasKey($field, $response->json()['errors']);
     }
 }
